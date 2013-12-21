@@ -7,5 +7,5 @@ H5-Player
 ---
 
 ```var player = new H5.Player("container");
-```player.setSize(640, 480);
-```player.load("demo.mp4");
+player.setSize(640, 480);
+player.load("demo.mp4");```
