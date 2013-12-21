@@ -32,7 +32,13 @@ H5.Player = function (parentElement) {
 			drawProgress(slider, video.buffered.end(0), video.currentTime, video.duration)
 		}, false);
 		playstop.addEventListener("click", function () {
-			video.play();
+			if (playstop.className === "h5-player-play") {
+				playstop.className = "h5-player-stop";
+	 			video.play();
+			} else if (playstop.className === "h5-player-stop") {
+				playstop.className = "h5-player-play";
+				video.pause();
+			}
 		}, false);
 	}();
 	
