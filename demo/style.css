@@ -1,0 +1,7 @@
+body, div {
+	margin:0 auto;
+}
+.container {
+	width: 640px;
+	height: 480px;
+}

@@ -1,0 +1,55 @@
+.h5-player-control {
+	margin: 0;
+	background: #1b1b1b;
+	position: relative;
+	top: -34px;
+	height: 34px;
+}
+
+.h5-player-slider {
+	display: block;
+	background: #444444;
+}
+
+.h5-player-time {
+	font-size: 13px;
+	margin: 0;
+	width: 120px;
+	height: 15px;
+	position: relative;
+	left: 40px;
+	top: 7px;
+	display: inline-block;
+	color: #ffffff;
+	overflow: hidden;
+}
+
+.h5-player-play {
+	margin: 0;
+	width: 15px;
+	height: 15px;
+	position: relative;
+	left: 20px;
+	top: 8px;
+	display: inline-block;
+	background: url("../img/playstop.png") no-repeat 0 -15px;
+}
+
+.h5-player-play:hover {
+	cursor: pointer;
+}
+
+.h5-player-stop {
+	margin: 0;
+	width: 15px;
+	height: 15px;
+	position: relative;
+	left: 20px;
+	top: 8px;
+	display: inline-block;
+	background: url("../img/playstop.png") no-repeat 0 0;
+}
+
+.h5-player-stop {
+	cursor: pointer;
+}
