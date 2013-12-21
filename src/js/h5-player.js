@@ -20,12 +20,11 @@ H5.Player = function (parentElement) {
 		slider.width = parent.offsetWidth;
 		slider.height = 4;
 		time.className = "h5-player-time";
-		time.innerHTML = "00:00:00";
+		time.innerHTML = "00:00:00 / 00:00:00";
 	}();
 	
 	var initLogic = function () {
 		video.addEventListener("timeupdate", function () {
-			time.innerHTML = secondToTime(Math.round(video.currentTime));
 			drawProgress(slider, video.buffered.end(0), video.currentTime, video.duration)
 		}, false);
 		video.addEventListener("progress", function () {
@@ -56,6 +55,8 @@ H5.Player = function (parentElement) {
 		ctx.fillRect(0, 0, buffered / total * canvas.width, canvas.height);
 		ctx.fillStyle = "#cc181e";
 		ctx.fillRect(0, 0, current / total * canvas.width, canvas.height);
+		time.innerHTML = secondToTime(Math.round(video.currentTime)) +
+			" / " + secondToTime(Math.round(video.duration));
 	}
 	
 	function secondToTime(seconds) {
