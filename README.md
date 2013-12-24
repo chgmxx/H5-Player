@@ -8,6 +8,8 @@ H5-Player
 - 显示视频当前播放进度、缓冲进度
 - 开始、暂停
 - 调整进度
+- 自动播放
+- 全屏
 
 ##代码示例
 ---
@@ -19,6 +21,7 @@ H5-Player
     var player = new H5.Player("container");  
     player.setSize(640, 480);
     player.poster("poster.png");
+    player.autoPlay(true);
     player.load("demo.mp4");
   </script>
 </body>
