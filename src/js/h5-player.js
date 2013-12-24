@@ -9,7 +9,8 @@ H5.Player = function (parentElement) {
 		slider = document.createElement("div"),
 		playstop = document.createElement("div"),
 		progress = document.createElement("canvas"),
-		time = document.createElement("div");
+		time = document.createElement("div"),
+		fullscreen = document.createElement("div");
 		
 	var initUI = function () {
 		video.width = 640;
@@ -22,9 +23,9 @@ H5.Player = function (parentElement) {
 		progress.height = 8;
 		slider.className = "h5-player-slider";
 		time.className = "h5-player-time";
-		time.innerHTML = "00:00:00 / 00:00:00";
+		fullscreen.className = "h5-player-fullscreen";
 	}();
-	
+		
 	var initLogic = function () {
 		var isDrag = false;
 		var sliderMouseMove = function (e) {
@@ -61,7 +62,15 @@ H5.Player = function (parentElement) {
 			document.addEventListener("mouseup", sliderMoveUp, false);
 		}
 
+		var videoDurationChange = function () {
+			drawProgress(progress, video.buffered.end(0), video.currentTime, video.duration);
+		}
 		var videoTimeUpdate = function () {
+			if (!isDrag) {
+				drawProgress(progress, video.buffered.end(0), video.currentTime, video.duration)
+			}
+		}
+		var videoProgress = function () {
 			if (!isDrag) {
 				drawProgress(progress, video.buffered.end(0), video.currentTime, video.duration)
 			}
@@ -83,6 +92,18 @@ H5.Player = function (parentElement) {
 			}
 		}
 
+		var fullScreenClick = function (e) {
+			if (video.requestFullscreen) {
+				video.requestFullscreen();
+			} else if (video.msRequestFullscreen) {
+				video.msRequestFullscreen();
+			} else if (video.mozRequestFullScreen) {
+				video.mozRequestFullScreen();
+			} else if (video.webkitRequestFullscreen) {
+				video.webkitRequestFullscreen();
+			}
+		}
+
 		var progressMouseOver = function (e) {
 			slider.style.visibility = "visible";
 		}
@@ -93,10 +114,14 @@ H5.Player = function (parentElement) {
 		}
 
 		video.addEventListener("timeupdate", videoTimeUpdate, false);
+		video.addEventListener("progress", videoProgress, false);
 		video.addEventListener("play", videoPlay, false);
 		video.addEventListener("pause", videoPause, false);
+		video.addEventListener("durationchange", videoDurationChange, false);
 
 		playstop.addEventListener("click", playStopClick, false);
+
+		fullscreen.addEventListener("click", fullScreenClick, false);
 
 		progress.addEventListener("mouseover", progressMouseOver, false);
 		progress.addEventListener("mouseout", progressMouseOut, false);
@@ -111,6 +136,7 @@ H5.Player = function (parentElement) {
 	control.appendChild(slider);
 	control.appendChild(playstop);
 	control.appendChild(time);
+	control.appendChild(fullscreen);
 	parent.appendChild(video);
 	parent.appendChild(control);
 	
@@ -149,6 +175,12 @@ H5.Player = function (parentElement) {
 		
 	this.load = function (src) {
 		video.src = src;
+	}
+
+	this.autoPlay = function (bol) {
+		if (bol) {
+			video.autoplay = "autoplay";
+		}
 	}
 
 	this.poster = function (src) {

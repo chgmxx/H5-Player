@@ -30,7 +30,7 @@
 .h5-player-time {
 	font-size: 13px;
 	margin: 0;
-	width: 120px;
+	width: 140px;
 	height: 15px;
 	position: relative;
 	left: 40px;
@@ -68,5 +68,21 @@
 }
 
 .h5-player-stop {
+	cursor: pointer;
+}
+
+.h5-player-fullscreen {
+	margin: 0;
+	width: 20px;
+	height: 17px;
+	float: right;
+	position: relative;
+	top: 9px;
+	left: -10px;
+	display: inline-block;
+	background: url("../img/fullscreen.png") no-repeat 0 0;
+}
+
+.h5-player-fullscreen:hover {
 	cursor: pointer;
 }
