@@ -17,7 +17,8 @@ H5-Player
   </div>
   <script>
     var player = new H5.Player("container");  
-    player.setSize(640, 480);  
+    player.setSize(640, 480);
+    player.poster("poster.png");
     player.load("demo.mp4");
   </script>
 </body>
