@@ -6,8 +6,9 @@ H5.Player = function (parentElement) {
 		document.getElementsByTagName("body")[0],
 		video = document.createElement("video"),
 		control = document.createElement("div"),
+		slider = document.createElement("div"),
 		playstop = document.createElement("div"),
-		slider = document.createElement("canvas"),
+		progress = document.createElement("canvas"),
 		time = document.createElement("div");
 		
 	var initUI = function () {
@@ -16,21 +17,63 @@ H5.Player = function (parentElement) {
 		video.preload = "preload";
 		control.className = "h5-player-control";
 		playstop.className = "h5-player-play";
+		progress.className = "h5-player-progress";
+		progress.width = parent.offsetWidth;
+		progress.height = 8;
 		slider.className = "h5-player-slider";
-		slider.width = parent.offsetWidth;
-		slider.height = 4;
 		time.className = "h5-player-time";
 		time.innerHTML = "00:00:00 / 00:00:00";
 	}();
 	
 	var initLogic = function () {
-		video.addEventListener("timeupdate", function () {
-			drawProgress(slider, video.buffered.end(0), video.currentTime, video.duration)
-		}, false);
-		video.addEventListener("progress", function () {
-			drawProgress(slider, video.buffered.end(0), video.currentTime, video.duration)
-		}, false);
-		playstop.addEventListener("click", function () {
+		var isDrag = false;
+		var sliderMouseMove = function (e) {
+			if (isDrag) {
+				slider.style.left = e.clientX - parent.offsetLeft + "px";
+				if (parseInt(slider.style.left) + 16 > progress.width) {
+					slider.style.left = progress.width - 16 + "px";
+				} else if (parseInt(slider.style.left) < 0) {
+					slider.style.left = "0px";
+				}
+				drawProgress(progress, video.buffered.end(0), parseInt(slider.style.left), progress.width)
+			}
+		};
+		var sliderMoveUp = function (e) {
+			document.removeEventListener("mouseup", sliderMoveUp, false);
+			document.removeEventListener("mousemove", sliderMouseMove, false);
+			isDrag = false;
+			video.currentTime = parseInt(slider.style.left) / progress.width * video.duration;
+			video.play();
+		}
+		var sliderMouseOver = function (e) {
+			slider.style.visibility = "visible";
+		}
+		var sliderMouseOut = function (e) {
+			if (!isDrag) {
+				slider.style.visibility = "hidden";
+			}
+		}
+		var sliderMouseDown = function (e) {
+			isDrag = true;
+			slider.style.visibility = "visible";
+			video.pause();
+			document.addEventListener("mousemove", sliderMouseMove, false);
+			document.addEventListener("mouseup", sliderMoveUp, false);
+		}
+
+		var videoTimeUpdate = function () {
+			if (!isDrag) {
+				drawProgress(progress, video.buffered.end(0), video.currentTime, video.duration)
+			}
+		}
+		var videoPlay = function () {
+			playstop.className = "h5-player-stop";
+		}
+		var videoPause = function () {
+			playstop.className = "h5-player-play";
+		}
+
+		var playStopClick = function () {
 			if (playstop.className === "h5-player-play") {
 				playstop.className = "h5-player-stop";
 	 			video.play();
@@ -38,10 +81,33 @@ H5.Player = function (parentElement) {
 				playstop.className = "h5-player-play";
 				video.pause();
 			}
-		}, false);
+		}
+
+		var progressMouseOver = function (e) {
+			slider.style.visibility = "visible";
+		}
+		var progressMouseOut = function (e) {
+			if (!isDrag) {
+				slider.style.visibility = "hidden";
+			}
+		}
+
+		video.addEventListener("timeupdate", videoTimeUpdate, false);
+		video.addEventListener("play", videoPlay, false);
+		video.addEventListener("pause", videoPause, false);
+
+		playstop.addEventListener("click", playStopClick, false);
+
+		progress.addEventListener("mouseover", progressMouseOver, false);
+		progress.addEventListener("mouseout", progressMouseOut, false);
+
+		slider.addEventListener("mouseover", sliderMouseOver, false);
+		slider.addEventListener("mouseout", sliderMouseOut, false);
+		slider.addEventListener("mousedown", sliderMouseDown, false);
 	}();
 	
 		
+	control.appendChild(progress);
 	control.appendChild(slider);
 	control.appendChild(playstop);
 	control.appendChild(time);
@@ -55,8 +121,9 @@ H5.Player = function (parentElement) {
 		ctx.fillRect(0, 0, buffered / total * canvas.width, canvas.height);
 		ctx.fillStyle = "#cc181e";
 		ctx.fillRect(0, 0, current / total * canvas.width, canvas.height);
-		time.innerHTML = secondToTime(Math.round(video.currentTime)) +
-			" / " + secondToTime(Math.round(video.duration));
+		time.innerHTML = secondToTime(parseInt(video.currentTime)) +
+			" / " + secondToTime(parseInt(video.duration));
+		slider.style.left = parseInt(current / total * canvas.width) + "px";
 	}
 	
 	function secondToTime(seconds) {

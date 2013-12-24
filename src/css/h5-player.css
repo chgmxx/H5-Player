@@ -2,13 +2,29 @@
 	margin: 0;
 	background: #1b1b1b;
 	position: relative;
-	top: -34px;
-	height: 34px;
+	top: -40px;
+	height: 40px;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+
+.h5-player-progress {
+	display: block;
+	background: #444444;
 }
 
 .h5-player-slider {
-	display: block;
-	background: #444444;
+	width: 16px;
+    height: 16px;
+    display: inline-block;
+    position: relative;
+   	top: -12px;
+   	visibility: hidden;
+	background: url("../img/slider.png") no-repeat 0 0;
+}
+
+.h5-player-slider:hover {
+	cursor: pointer;
 }
 
 .h5-player-time {
