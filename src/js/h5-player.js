@@ -150,4 +150,8 @@ H5.Player = function (parentElement) {
 	this.load = function (src) {
 		video.src = src;
 	}
+
+	this.poster = function (src) {
+		video.poster = src;
+	}
 }

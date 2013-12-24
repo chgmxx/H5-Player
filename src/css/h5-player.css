@@ -2,7 +2,7 @@
 	margin: 0;
 	background: #1b1b1b;
 	position: relative;
-	top: -40px;
+	top: -5px;
 	height: 40px;
 	-moz-user-select: none;
 	-webkit-user-select: none;
@@ -15,9 +15,9 @@
 
 .h5-player-slider {
 	width: 16px;
-    height: 16px;
-    display: inline-block;
-    position: relative;
+	height: 16px;
+	display: inline-block;
+	position: relative;
    	top: -12px;
    	visibility: hidden;
 	background: url("../img/slider.png") no-repeat 0 0;
