@@ -49,7 +49,7 @@
 	left: 20px;
 	top: 8px;
 	display: inline-block;
-	background: url("../img/playstop.png") no-repeat 0 -15px;
+	background: url("../img/playpause_small.png") no-repeat 0 -15px;
 }
 
 .h5-player-play:hover {
@@ -64,7 +64,7 @@
 	left: 20px;
 	top: 8px;
 	display: inline-block;
-	background: url("../img/playstop.png") no-repeat 0 0;
+	background: url("../img/playpause_small.png") no-repeat 0 0;
 }
 
 .h5-player-stop {
@@ -84,5 +84,33 @@
 }
 
 .h5-player-fullscreen:hover {
+	cursor: pointer;
+}
+
+.h5-player-play-big {
+	margin: 0;
+	width: 117px;
+	height: 117px;
+	display: inline-block;
+	position: absolute;
+	background: url("../img/playpause_big.png") no-repeat 0 0;
+}
+
+.h5-player-play-big:hover {
+	cursor: pointer;
+}
+
+.h5-player-stop-big {
+	margin: 0;
+	width: 117px;
+	height: 117px;
+	display: inline-block;
+	position: absolute;
+	display: inline-block;
+	visibility: hidden;
+	background: url("../img/playpause_big.png") no-repeat 0 -117px;
+}
+
+.h5-player-stop-big {
 	cursor: pointer;
 }

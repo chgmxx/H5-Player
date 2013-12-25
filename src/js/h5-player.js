@@ -10,12 +10,13 @@ H5.Player = function (parentElement) {
 		playstop = document.createElement("div"),
 		progress = document.createElement("canvas"),
 		time = document.createElement("div"),
-		fullscreen = document.createElement("div");
+		fullscreen = document.createElement("div"),
+		playstopBig = document.createElement("div");
 		
 	var initUI = function () {
 		video.width = 640;
 		video.height = 480;
-		video.preload = "preload";
+		video.preload = "auto";
 		control.className = "h5-player-control";
 		playstop.className = "h5-player-play";
 		progress.className = "h5-player-progress";
@@ -24,6 +25,9 @@ H5.Player = function (parentElement) {
 		slider.className = "h5-player-slider";
 		time.className = "h5-player-time";
 		fullscreen.className = "h5-player-fullscreen";
+		playstopBig.className = "h5-player-play-big";
+		playstopBig.style.left = parseInt(parent.offsetLeft) + ((parseInt(parent.offsetWidth) - 117) / 2) + "px";
+		playstopBig.style.top = (parseInt(parent.offsetHeight) - 117) / 2 + "px";
 	}();
 		
 	var initLogic = function () {
@@ -77,17 +81,17 @@ H5.Player = function (parentElement) {
 		}
 		var videoPlay = function () {
 			playstop.className = "h5-player-stop";
+			playstopBig.className = "h5-player-stop-big";
 		}
 		var videoPause = function () {
 			playstop.className = "h5-player-play";
+			playstopBig.className = "h5-player-play-big";
 		}
 
 		var playStopClick = function () {
-			if (playstop.className === "h5-player-play") {
-				playstop.className = "h5-player-stop";
+			if (video.paused) {
 	 			video.play();
-			} else if (playstop.className === "h5-player-stop") {
-				playstop.className = "h5-player-play";
+			} else {
 				video.pause();
 			}
 		}
@@ -120,6 +124,7 @@ H5.Player = function (parentElement) {
 		video.addEventListener("durationchange", videoDurationChange, false);
 
 		playstop.addEventListener("click", playStopClick, false);
+		playstopBig.addEventListener("click", playStopClick, false);
 
 		fullscreen.addEventListener("click", fullScreenClick, false);
 
@@ -139,7 +144,8 @@ H5.Player = function (parentElement) {
 	control.appendChild(fullscreen);
 	parent.appendChild(video);
 	parent.appendChild(control);
-	
+	parent.appendChild(playstopBig);
+
 	function drawProgress(canvas, buffered, current, total) {
 		var ctx = canvas.getContext("2d");
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
