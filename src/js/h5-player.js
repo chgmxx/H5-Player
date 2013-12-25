@@ -8,14 +8,30 @@ H5.Player = function (parentElement) {
 	
 	var parent = document.getElementById(parentElement) ||
 		document.getElementsByTagName("body")[0],
-		video = document.createElement("video"),
+        video = document.createElement("video"),
 		control = document.createElement("div"),
 		slider = document.createElement("div"),
 		playstop = document.createElement("div"),
-		progress = document.createElement("canvas"),
+		progressBg = document.createElement("div"),
+        progress = document.createElement("div"),
+        buffered = document.createElement("div"),
 		time = document.createElement("div"),
 		fullscreen = document.createElement("div"),
 		playstopBig = document.createElement("div"),
+        getTop = function (e) {
+            var offset = e.offsetTop;
+            if (e.offsetParent !== null) {
+                offset += getTop(e.offsetParent);
+            }
+            return offset;
+        },
+        getLeft = function (e) {
+            var offset = e.offsetLeft;
+            if (e.offsetParent !== null) {
+                offset += getLeft(e.offsetParent);
+            }
+            return offset;
+        },
         secondToTime = function (seconds) {
             var hour = parseInt(seconds / 3600, 10) || 0,
                 min = parseInt((seconds - hour * 3600) / 60, 10) || 0,
@@ -40,16 +56,22 @@ H5.Player = function (parentElement) {
                 return "PC";
             }
         },
-        drawProgress = function (canvas, buffered, current, total) {
-            var ctx = canvas.getContext("2d");
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#777777";
-            ctx.fillRect(0, 0, buffered / total * canvas.width, canvas.height);
-            ctx.fillStyle = "#cc181e";
-            ctx.fillRect(0, 0, current / total * canvas.width, canvas.height);
+        drawProgress = function (bufferedTime, current, total) {
+            if (isNaN(bufferedTime + current + total)) {
+                return;
+            }
+            progress.style.width = current / total * progressBg.offsetWidth + "px";
+            buffered.style.width = bufferedTime / total * progressBg.offsetWidth + "px";
             time.innerHTML = secondToTime(parseInt(video.currentTime, 10)) +
                 " / " + secondToTime(parseInt(video.duration, 10));
-            slider.style.left = parseInt(current / total * canvas.width, 10) + "px";
+        },
+        drawSliderPosition = function (current, total) {
+            slider.style.left = current / total * (progressBg.offsetWidth - 16) + "px";
+            if (parseInt(slider.style.left, 10) < 0) {
+                slider.style.left = "0px";
+            } else if (parseInt(slider.style.left, 10) > progressBg.offsetWidth - 16) {
+                slider.style.left = progressBg.offsetWidth - 16 + "px";
+            }
         },
         initUI = function () {
             video.width = 640;
@@ -57,9 +79,9 @@ H5.Player = function (parentElement) {
             video.preload = "meta";
             control.className = "h5-player-control";
             playstop.className = "h5-player-play";
+            progressBg.className = "h5-player-progress-bg";
             progress.className = "h5-player-progress";
-            progress.width = parent.offsetWidth;
-            progress.height = 8;
+            buffered.className = "h5-player-buffered";
             slider.className = "h5-player-slider";
             time.className = "h5-player-time";
             fullscreen.className = "h5-player-fullscreen";
@@ -71,20 +93,15 @@ H5.Player = function (parentElement) {
             var isDrag = false,
                 sliderMouseMove = function (e) {
                     if (isDrag) {
-                        slider.style.left = e.clientX - parent.offsetLeft + "px";
-                        if (parseInt(slider.style.left, 10) + 16 > progress.width) {
-                            slider.style.left = progress.width - 16 + "px";
-                        } else if (parseInt(slider.style.left, 10) < 0) {
-                            slider.style.left = "0px";
-                        }
-                        drawProgress(progress, video.buffered.end(0), parseInt(slider.style.left, 10), progress.width);
+                        drawSliderPosition(e.clientX - getLeft(progressBg), progressBg.offsetWidth);
+                        drawProgress((video.buffered.end(0) / video.duration) * progressBg.offsetWidth, e.clientX - getLeft(progressBg), progressBg.offsetWidth);
                     }
                 },
                 sliderMoveUp = function (e) {
                     document.removeEventListener("mouseup", sliderMoveUp, false);
                     document.removeEventListener("mousemove", sliderMouseMove, false);
                     isDrag = false;
-                    video.currentTime = parseInt(slider.style.left, 10) / progress.width * video.duration;
+                    video.currentTime = slider.offsetLeft / (progressBg.offsetWidth - 16) * video.duration;
                     video.play();
                 },
                 sliderMouseOver = function (e) {
@@ -103,16 +120,17 @@ H5.Player = function (parentElement) {
                     document.addEventListener("mouseup", sliderMoveUp, false);
                 },
                 videoDurationChange = function () {
-                    drawProgress(progress, video.buffered.end(0), video.currentTime, video.duration);
+                    drawProgress(video.buffered.end(0), video.currentTime, video.duration);
                 },
                 videoTimeUpdate = function () {
                     if (!isDrag) {
-                        drawProgress(progress, video.buffered.end(0), video.currentTime, video.duration);
+                        drawProgress(video.buffered.end(0), video.currentTime, video.duration);
                     }
                 },
                 videoProgress = function () {
                     if (!isDrag) {
-                        drawProgress(progress, video.buffered.end(0), video.currentTime, video.duration);
+                        drawProgress(video.buffered.end(0), video.currentTime, video.duration);
+                        drawSliderPosition(video.currentTime, video.duration);
                     }
                 },
                 videoPlay = function () {
@@ -161,8 +179,8 @@ H5.Player = function (parentElement) {
     
             fullscreen.addEventListener("click", fullScreenClick, false);
     
-            progress.addEventListener("mouseover", progressMouseOver, false);
-            progress.addEventListener("mouseout", progressMouseOut, false);
+            progressBg.addEventListener("mouseover", progressMouseOver, false);
+            progressBg.addEventListener("mouseout", progressMouseOut, false);
     
             slider.addEventListener("mouseover", sliderMouseOver, false);
             slider.addEventListener("mouseout", sliderMouseOut, false);
@@ -191,7 +209,9 @@ H5.Player = function (parentElement) {
     initUI();
     initLogic();
 	
-	control.appendChild(progress);
+    progressBg.appendChild(buffered);
+    progressBg.appendChild(progress);
+	control.appendChild(progressBg);
 	control.appendChild(slider);
 	control.appendChild(playstop);
 	control.appendChild(time);

@@ -8,9 +8,25 @@
 	-webkit-user-select: none;
 }
 
-.h5-player-progress {
+.h5-player-progress-bg {
 	display: block;
 	background: #444444;
+    width: 100%;
+    height: 8px;
+}
+
+.h5-player-buffered {
+	display: inline-block;
+	background: #777777;
+    height: 8px;
+    position: absolute;
+}
+
+.h5-player-progress {
+	display: inline-block;
+	background: #cc181e;
+    height: 8px;
+    position: absolute;
 }
 
 .h5-player-slider {
