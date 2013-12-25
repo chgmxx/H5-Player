@@ -185,6 +185,24 @@ H5.Player = function (parentElement) {
             slider.addEventListener("mouseover", sliderMouseOver, false);
             slider.addEventListener("mouseout", sliderMouseOut, false);
             slider.addEventListener("mousedown", sliderMouseDown, false);
+        },
+        addUI = function () {
+            progressBg.appendChild(buffered);
+            progressBg.appendChild(progress);
+            control.appendChild(progressBg);
+            control.appendChild(slider);
+            control.appendChild(playstop);
+            control.appendChild(time);
+            control.appendChild(fullscreen);
+            parent.appendChild(video);
+
+            if (checkOperatingSystem() === "iOS") {
+                video.controls = true;
+            } else {
+                video.controls = false;
+                parent.appendChild(playstopBig);
+                parent.appendChild(control);
+            }
         };
     
     this.setSize = function (w, h) {
@@ -208,21 +226,5 @@ H5.Player = function (parentElement) {
     
     initUI();
     initLogic();
-	
-    progressBg.appendChild(buffered);
-    progressBg.appendChild(progress);
-	control.appendChild(progressBg);
-	control.appendChild(slider);
-	control.appendChild(playstop);
-	control.appendChild(time);
-	control.appendChild(fullscreen);
-	parent.appendChild(video);
-
-	if (checkOperatingSystem() === "iOS") {
-		video.controls = true;
-	} else {
-		video.controls = false;
-		parent.appendChild(playstopBig);
-		parent.appendChild(control);
-	}
+    addUI();
 };
