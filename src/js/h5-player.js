@@ -208,20 +208,24 @@ H5.Player = function (parentElement) {
     this.setSize = function (w, h) {
 		video.width = w;
 		video.height = h;
+        return this;
 	};
 		
 	this.load = function (src) {
 		video.src = src;
+        return this;
 	};
 
 	this.autoPlay = function (bol) {
 		if (bol) {
 			video.autoplay = "autoplay";
 		}
+        return this;
 	};
 
 	this.poster = function (src) {
 		video.poster = src;
+        return this;
 	};
     
     initUI();
