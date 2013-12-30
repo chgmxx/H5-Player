@@ -246,13 +246,6 @@ H5.Player = function (parentElement) {
 		video.src = src;
 		return this;
 	};
-
-    this.autobuffer = function autobuffer(bol) {
-        if (bol) {
-			video.autobuffer = "autobuffer";
-		}
-		return this;
-    };
     
 	this.autoPlay = function autoPlay(bol) {
 		if (bol) {
