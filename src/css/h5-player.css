@@ -1,4 +1,9 @@
+.h5-player-container {
+    text-align: center;
+}
+
 .h5-player-control {
+    text-align: left;
 	margin: 0;
 	background: #1b1b1b;
 	position: relative;
