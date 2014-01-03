@@ -1,8 +1,5 @@
-.h5-player-container {
-    text-align: center;
-}
-
 .h5-player-container video {
+	margin: 0 auto;
 	display: block;
 }
 
